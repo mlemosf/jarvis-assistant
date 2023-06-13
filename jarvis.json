@@ -1,0 +1,232 @@
+[
+    {
+        "id": "0f6c0a2c44eec20d",
+        "type": "tab",
+        "label": "jarvis",
+        "disabled": false,
+        "info": "# JARVIS\n\nVoice activated personal assistant using NodeRed and OpenAI APIs.",
+        "env": []
+    },
+    {
+        "id": "80f466d0fe9ba7be",
+        "type": "http request",
+        "z": "0f6c0a2c44eec20d",
+        "name": "OpenAI completions API",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "body",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "bearer",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "application/json",
+                "valueValue": ""
+            }
+        ],
+        "x": 710,
+        "y": 760,
+        "wires": [
+            [
+                "49ddb88b1eb04b57"
+            ]
+        ]
+    },
+    {
+        "id": "f92db8ec6b2dc53d",
+        "type": "debug",
+        "z": "0f6c0a2c44eec20d",
+        "name": "msg.payload",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 830,
+        "y": 900,
+        "wires": []
+    },
+    {
+        "id": "49ddb88b1eb04b57",
+        "type": "function",
+        "z": "0f6c0a2c44eec20d",
+        "name": "retira payload",
+        "func": "var parsed_payload = msg.payload.choices[0].message.content\nmsg.payload = parsed_payload\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 740,
+        "y": 840,
+        "wires": [
+            [
+                "f92db8ec6b2dc53d"
+            ]
+        ]
+    },
+    {
+        "id": "4ef1aa90bb658b7f",
+        "type": "http request",
+        "z": "0f6c0a2c44eec20d",
+        "name": "OpenAI Whisper API",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.openai.com/v1/audio/transcriptions",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "bearer",
+        "senderr": false,
+        "headers": [
+            {
+                "keyType": "Content-Type",
+                "keyValue": "",
+                "valueType": "multipart/form-data",
+                "valueValue": ""
+            }
+        ],
+        "x": 260,
+        "y": 740,
+        "wires": [
+            [
+                "f7443ec9cc646d46"
+            ]
+        ]
+    },
+    {
+        "id": "80bff168319706a6",
+        "type": "inject",
+        "z": "0f6c0a2c44eec20d",
+        "name": "chama API",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "str",
+        "x": 140,
+        "y": 580,
+        "wires": [
+            [
+                "b4f0e29df463d2d3"
+            ]
+        ]
+    },
+    {
+        "id": "78fe34d4dae10336",
+        "type": "debug",
+        "z": "0f6c0a2c44eec20d",
+        "name": "mostra texto",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 470,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "b4f0e29df463d2d3",
+        "type": "function",
+        "z": "0f6c0a2c44eec20d",
+        "name": "lê arquivo para payload",
+        "func": "msg.headers= {};\nvar fs = global.get('fs');\nmsg.payload = {\n    'model': 'whisper-1',\n    'file': {\n        value: fs.readFileSync(\"/home/texugo/Audio/userinput.wav\"),\n        options: {\n            filename: 'audio4.wav',\n            contentType: 'wav'\n        }\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 660,
+        "wires": [
+            [
+                "4ef1aa90bb658b7f"
+            ]
+        ]
+    },
+    {
+        "id": "f7443ec9cc646d46",
+        "type": "function",
+        "z": "0f6c0a2c44eec20d",
+        "name": "retira text",
+        "func": "msg.payload = msg.payload.text;\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 820,
+        "wires": [
+            [
+                "3142b096021caaac"
+            ]
+        ]
+    },
+    {
+        "id": "3142b096021caaac",
+        "type": "function",
+        "z": "0f6c0a2c44eec20d",
+        "name": "function 1",
+        "func": "var received_text = msg.payload;\nmsg.payload = {\n    \"model\": \"gpt-3.5-turbo\",\n    \"messages\": [{ \"role\": \"user\", \"content\": received_text }]\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 920,
+        "wires": [
+            [
+                "78fe34d4dae10336",
+                "80f466d0fe9ba7be"
+            ]
+        ]
+    },
+    {
+        "id": "adb94d85521da474",
+        "type": "comment",
+        "z": "0f6c0a2c44eec20d",
+        "name": "API de transcrição",
+        "info": "# Chama o Whisper da OpenAI para transcrição de um arquivo de texto",
+        "x": 150,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "b696ecfc4605e53f",
+        "type": "comment",
+        "z": "0f6c0a2c44eec20d",
+        "name": "API do ChatGPT",
+        "info": "",
+        "x": 680,
+        "y": 700,
+        "wires": []
+    }
+]
