@@ -1,16 +1,41 @@
 [
     {
-        "id": "0f6c0a2c44eec20d",
-        "type": "tab",
-        "label": "jarvis",
-        "disabled": false,
-        "info": "# JARVIS\n\nVoice activated personal assistant using NodeRed and OpenAI APIs.",
-        "env": []
+        "id": "157e82a6676d1230",
+        "type": "subflow",
+        "name": "Subflow 2",
+        "info": "",
+        "category": "",
+        "in": [
+            {
+                "x": 40,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "80f466d0fe9ba7be"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 420,
+                "y": 140,
+                "wires": [
+                    {
+                        "id": "80f466d0fe9ba7be",
+                        "port": 0
+                    }
+                ]
+            }
+        ],
+        "env": [],
+        "meta": {},
+        "color": "#DDAA99"
     },
     {
         "id": "80f466d0fe9ba7be",
         "type": "http request",
-        "z": "0f6c0a2c44eec20d",
+        "z": "157e82a6676d1230",
         "name": "OpenAI completions API",
         "method": "POST",
         "ret": "obj",
@@ -30,54 +55,55 @@
                 "valueValue": ""
             }
         ],
-        "x": 710,
-        "y": 760,
+        "x": 230,
+        "y": 140,
         "wires": [
-            [
-                "49ddb88b1eb04b57"
-            ]
+            []
         ]
     },
     {
-        "id": "f92db8ec6b2dc53d",
-        "type": "debug",
-        "z": "0f6c0a2c44eec20d",
-        "name": "msg.payload",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 830,
-        "y": 900,
+        "id": "b696ecfc4605e53f",
+        "type": "comment",
+        "z": "157e82a6676d1230",
+        "name": "API do ChatGPT",
+        "info": "",
+        "x": 200,
+        "y": 80,
         "wires": []
     },
     {
-        "id": "49ddb88b1eb04b57",
-        "type": "function",
-        "z": "0f6c0a2c44eec20d",
-        "name": "retira payload",
-        "func": "var parsed_payload = msg.payload.choices[0].message.content\nmsg.payload = parsed_payload\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 740,
-        "y": 840,
-        "wires": [
-            [
-                "f92db8ec6b2dc53d"
-            ]
+        "id": "e39f6cd23e96e790",
+        "type": "subflow",
+        "name": "Subflow 1",
+        "info": "",
+        "in": [
+            {
+                "x": 20,
+                "y": 80,
+                "wires": [
+                    {
+                        "id": "4ef1aa90bb658b7f"
+                    }
+                ]
+            }
+        ],
+        "out": [
+            {
+                "x": 340,
+                "y": 220,
+                "wires": [
+                    {
+                        "id": "3142b096021caaac",
+                        "port": 0
+                    }
+                ]
+            }
         ]
     },
     {
         "id": "4ef1aa90bb658b7f",
         "type": "http request",
-        "z": "0f6c0a2c44eec20d",
+        "z": "e39f6cd23e96e790",
         "name": "OpenAI Whisper API",
         "method": "POST",
         "ret": "obj",
@@ -97,8 +123,8 @@
                 "valueValue": ""
             }
         ],
-        "x": 260,
-        "y": 740,
+        "x": 160,
+        "y": 80,
         "wires": [
             [
                 "f7443ec9cc646d46"
@@ -106,74 +132,9 @@
         ]
     },
     {
-        "id": "80bff168319706a6",
-        "type": "inject",
-        "z": "0f6c0a2c44eec20d",
-        "name": "chama API",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "str",
-        "x": 140,
-        "y": 580,
-        "wires": [
-            [
-                "b4f0e29df463d2d3"
-            ]
-        ]
-    },
-    {
-        "id": "78fe34d4dae10336",
-        "type": "debug",
-        "z": "0f6c0a2c44eec20d",
-        "name": "mostra texto",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 470,
-        "y": 980,
-        "wires": []
-    },
-    {
-        "id": "b4f0e29df463d2d3",
-        "type": "function",
-        "z": "0f6c0a2c44eec20d",
-        "name": "lê arquivo para payload",
-        "func": "msg.headers= {};\nvar fs = global.get('fs');\nmsg.payload = {\n    'model': 'whisper-1',\n    'file': {\n        value: fs.readFileSync(\"/home/texugo/Audio/userinput.wav\"),\n        options: {\n            filename: 'audio4.wav',\n            contentType: 'wav'\n        }\n    }\n}\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 210,
-        "y": 660,
-        "wires": [
-            [
-                "4ef1aa90bb658b7f"
-            ]
-        ]
-    },
-    {
         "id": "f7443ec9cc646d46",
         "type": "function",
-        "z": "0f6c0a2c44eec20d",
+        "z": "e39f6cd23e96e790",
         "name": "retira text",
         "func": "msg.payload = msg.payload.text;\nreturn msg;",
         "outputs": 1,
@@ -181,8 +142,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
-        "y": 820,
+        "x": 180,
+        "y": 140,
         "wires": [
             [
                 "3142b096021caaac"
@@ -192,7 +153,7 @@
     {
         "id": "3142b096021caaac",
         "type": "function",
-        "z": "0f6c0a2c44eec20d",
+        "z": "e39f6cd23e96e790",
         "name": "function 1",
         "func": "var received_text = msg.payload;\nmsg.payload = {\n    \"model\": \"gpt-3.5-turbo\",\n    \"messages\": [{ \"role\": \"user\", \"content\": received_text }]\n}\nreturn msg;",
         "outputs": 1,
@@ -200,33 +161,174 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 400,
-        "y": 920,
+        "x": 220,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "7d568cf9d6a09d02",
+        "type": "comment",
+        "z": "e39f6cd23e96e790",
+        "name": "API de transcrição",
+        "info": "# Whisper API\n\nAPI da OpenAI utilizada para transcrição de voz para texto.",
+        "x": 170,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "0f6c0a2c44eec20d",
+        "type": "tab",
+        "label": "jarvis",
+        "disabled": false,
+        "info": "# JARVIS\n\nVoice activated personal assistant using NodeRed and OpenAI APIs.",
+        "env": []
+    },
+    {
+        "id": "bde79b6787586145",
+        "type": "subflow:e39f6cd23e96e790",
+        "z": "0f6c0a2c44eec20d",
+        "name": "Whisper API",
+        "x": 450,
+        "y": 980,
         "wires": [
             [
-                "78fe34d4dae10336",
-                "80f466d0fe9ba7be"
+                "86b98d5a11289306",
+                "b5f8a0a460e835c3"
             ]
         ]
     },
     {
-        "id": "adb94d85521da474",
-        "type": "comment",
+        "id": "86b98d5a11289306",
+        "type": "subflow:157e82a6676d1230",
         "z": "0f6c0a2c44eec20d",
-        "name": "API de transcrição",
-        "info": "# Chama o Whisper da OpenAI para transcrição de um arquivo de texto",
-        "x": 150,
-        "y": 540,
+        "name": "ChatGPT API",
+        "x": 460,
+        "y": 1060,
+        "wires": [
+            [
+                "72e219f282262382",
+                "49ddb88b1eb04b57"
+            ]
+        ]
+    },
+    {
+        "id": "b5f8a0a460e835c3",
+        "type": "debug",
+        "z": "0f6c0a2c44eec20d",
+        "name": "Debug Whisper transcription",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 980,
         "wires": []
     },
     {
-        "id": "b696ecfc4605e53f",
-        "type": "comment",
+        "id": "72e219f282262382",
+        "type": "debug",
         "z": "0f6c0a2c44eec20d",
-        "name": "API do ChatGPT",
-        "info": "",
-        "x": 680,
-        "y": 700,
+        "name": "ChatGPT Completions response",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 1060,
         "wires": []
+    },
+    {
+        "id": "09d5a6162ac09d84",
+        "type": "function",
+        "z": "0f6c0a2c44eec20d",
+        "name": "lê arquivo para payload",
+        "func": "msg.headers= {};\nvar fs = global.get('fs');\n//const path = \"/samples/userinput.wav\";\n// msg.payload = {\n//     'model': 'whisper-1',\n//     'file': {\n//         value: fs.readFileSync(path),\n//         options: {\n//             filename: 'message.wav',\n//             contentType: 'wav'\n//         }\n//     }\n// }\nconst file_buffer = msg.req.files[0].buffer\nconst file_type = msg.req.files[0].mimetype\nmsg.payload = {\n    'model': 'whisper-1',\n    'file': {\n        value: file_buffer,\n        options: {\n            filename: 'message.mp3',\n            contentType: file_type\n        }\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 900,
+        "wires": [
+            [
+                "bde79b6787586145"
+            ]
+        ]
+    },
+    {
+        "id": "b71b65bc0e864a8f",
+        "type": "http in",
+        "z": "0f6c0a2c44eec20d",
+        "name": "/jarvis",
+        "url": "/jarvis",
+        "method": "post",
+        "upload": true,
+        "swaggerDoc": "",
+        "x": 190,
+        "y": 900,
+        "wires": [
+            [
+                "09d5a6162ac09d84"
+            ]
+        ]
+    },
+    {
+        "id": "e9f94a273d982bb7",
+        "type": "http response",
+        "z": "0f6c0a2c44eec20d",
+        "name": "response",
+        "statusCode": "",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "x": 820,
+        "y": 1120,
+        "wires": []
+    },
+    {
+        "id": "49ddb88b1eb04b57",
+        "type": "function",
+        "z": "0f6c0a2c44eec20d",
+        "name": "Format payload",
+        "func": "var parsed_payload = msg.payload.choices[0].message.content\nconst response = {\n    'message': parsed_payload\n}\nmsg.payload = response\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 1120,
+        "wires": [
+            [
+                "d9d14fa8442d35b9"
+            ]
+        ]
+    },
+    {
+        "id": "d9d14fa8442d35b9",
+        "type": "json",
+        "z": "0f6c0a2c44eec20d",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 670,
+        "y": 1120,
+        "wires": [
+            [
+                "e9f94a273d982bb7"
+            ]
+        ]
     }
 ]
