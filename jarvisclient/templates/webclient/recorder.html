@@ -14,7 +14,7 @@
   <!-- /Title -->
 
   <!-- Stopwatch timer -->
-  <div d="stopwatch" class="bg-light p-3 container shadow-sm rounded" style="width: max-content">
+  <div id="stopwatch" class="bg-light p-3 container shadow-sm rounded" style="width: max-content">
     <div class="bg-white shadow-lg py-4 px-2 fw-bold font-monospace rounded d-flex justify-content-between align-items-center display fs-1">
       00 : 00 : 00 : 000
     </div>
@@ -27,6 +27,10 @@
   <!-- /Stopwatch timer -->
 
   <!-- Export menu -->
+  <div id="export_menu" class="bg-light p-5 container shadow-sm rounded" style="width: max-content; margin-top: 50px; display: none">
+    <button class="btn btn-lg btn-secondary start">Enviar requisição</button>
+  </div>
+  <!-- /Export menu -->
 
 <div>
 
@@ -37,6 +41,7 @@
   const pause = document.querySelector(".pause");
   const start = document.querySelector(".start");
   const display = document.querySelector(".display");
+  const export_menu = document.querySelector("#export_menu");
 
   // Variáveis para guardar cada tempo
   var [m, h, s, ms] = [0, 0, 0, 0];
@@ -49,6 +54,10 @@
 
 	  // Desabilita o botão de gravar
 	  start.disabled = true;
+
+	  // Desabilita o menu de exportação
+	  export_menu.style.display = "none";
+	
   });
 
   function setTime() {
@@ -79,6 +88,9 @@
 
 	  // Marca o botão de start como ativo
 	  start.disabled = false;
+
+	  // Desabilita o menu de exportação
+	  export_menu.style.display = "none";
 	
   });
 
@@ -87,6 +99,9 @@
 
 	  // Marca o botão de start como ativo
 	  start.disabled = false;
+
+	  // Habilita o menu de exportação
+	  export_menu.style.display = "block";
 	  
   });
 
