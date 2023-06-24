@@ -2,7 +2,7 @@
 
 <!-- start content -->
 {% block content %}
-
+<meta name="csrf-token" content="{% csrf_token %}">
 <div class="container-sm">
 
   <!-- Title -->
@@ -14,6 +14,7 @@
   <!-- /Title -->
 
   <!-- Stopwatch timer -->
+  <!-- Guide found at https://ssava.hashnode.dev/building-a-responsive-stopwatch-with-bootstrap-5-and-javascript -->
   <div id="stopwatch" class="bg-light p-3 container shadow-sm rounded" style="width: max-content">
     <div class="bg-white shadow-lg py-4 px-2 fw-bold font-monospace rounded d-flex justify-content-between align-items-center display fs-1">
       00 : 00 : 00 : 000
@@ -35,17 +36,34 @@
 <div>
 
 <!-- start extrajs -->
+{% csrf_token %}
 {% block extrajs %}
+<!-- Timer -->
 <script type="text/javascript">
   const stop = document.querySelector(".stop");
   const pause = document.querySelector(".pause");
   const start = document.querySelector(".start");
   const display = document.querySelector(".display");
   const export_menu = document.querySelector("#export_menu");
+  let mediaRecorder;
+  let audioChunks = [];
 
   // Variáveis para guardar cada tempo
   var [m, h, s, ms] = [0, 0, 0, 0];
   var interval = 0;
+
+ const handleSuccess = async function(stream) {
+	 // Começa a gravar
+	 mediaRecorder = new MediaRecorder(stream);
+     mediaRecorder.start();
+
+	 // Adiciona pedaçdos do áudio em um array
+	 mediaRecorder.addEventListener("dataavailable", event => {
+		 audioChunks.push(event.data);
+     });
+
+ };					  
+
 
   // Começa a contagem ao clicar no botão de gravar
   start.addEventListener("click", () => {
@@ -57,7 +75,14 @@
 
 	  // Desabilita o menu de exportação
 	  export_menu.style.display = "none";
-	
+
+	  // Grava áudio
+	  navigator.mediaDevices.getUserMedia({
+		  audio: true,
+		  video: false
+	  }).then(handleSuccess);
+
+
   });
 
   function setTime() {
@@ -102,8 +127,42 @@
 
 	  // Habilita o menu de exportação
 	  export_menu.style.display = "block";
-	  
+
+	  // Pausa a gravação de áudio e aguarda a chamada da requisição
+	  mediaRecorder.stop();
+
   });
+
+// Envio do arquivo quando o botão da chamada da API for pressionado
+ export_menu.addEventListener("click", () => {
+	const audioBlob = new Blob(audioChunks); 
+	 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+	 console.log(csrftoken)
+ 
+	 // Temporario: Gera URL para o áudio
+	 const audioUrl = URL.createObjectURL(audioBlob);
+
+	 // Chama o backend para processamento, armazenamento e chamada da API do Jarvis
+	 let audio_form = new FormData();
+	 audio_form.append('audio', audioBlob);
+
+	 $.ajax({
+		 url: '/',
+		 type: 'POST',
+		 data: audio_form,
+		 headers: {
+			 'X-CSRFTOKEN': csrftoken 
+		 },
+		 processData: false,
+		 contentType: false,
+		 success: function(data) {
+			 console.log("response" + JSON.stringify(data));
+		 },
+		 error: function() {
+			 console.log("ERRO");
+		 }
+	 })
+ });
 
   
 </script>
