@@ -34,6 +34,9 @@
   <!-- /Export menu -->
 
   <!-- Response field -->
+  <div id="response_field" class="bg-light p-5 container shadow-sm rounded" style="margin-top: 50px; display: none">
+	  <p id="response_text"></p>
+  </div>
 
   <!-- /Response field -->
 
@@ -49,6 +52,7 @@
   const start = document.querySelector(".start");
   const display = document.querySelector(".display");
   const export_menu = document.querySelector("#export_menu");
+  const response_field = document.querySelector("#response_field")
   let mediaRecorder;
   let audioChunks = [];
 
@@ -66,7 +70,6 @@
 	 mediaRecorder.addEventListener("dataavailable", event => {
 		 audioChunks.push(event.data);
      });
-
  };					  
 
 
@@ -121,6 +124,13 @@
 
 	  // Desabilita o menu de exportação
 	  export_menu.style.display = "none";
+
+	  // Reinicia o campo de resposta e esconde o campo
+	  response_field.style.display = "none";
+	  document.getElementById("response_text").innerHTML = '';
+
+	  // Esvazia o array de audioChunks
+	  audioChunks = [];
 	
   });
 
@@ -142,7 +152,6 @@
  export_menu.addEventListener("click", () => {
 	const audioBlob = new Blob(audioChunks); 
 	 const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-	 console.log(csrftoken)
  
 	 // Temporario: Gera URL para o áudio
 	 const audioUrl = URL.createObjectURL(audioBlob);
@@ -161,7 +170,8 @@
 		 processData: false,
 		 contentType: false,
 		 success: function(data) {
-			 console.log("response" + JSON.stringify(data));
+			 response_field.style.display = "block"
+			 document.getElementById("response_text").innerHTML = data.message;
 		 },
 		 error: function() {
 			 console.log("ERRO");
