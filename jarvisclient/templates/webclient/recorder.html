@@ -33,6 +33,10 @@
   </div>
   <!-- /Export menu -->
 
+  <!-- Response field -->
+
+  <!-- /Response field -->
+
 <div>
 
 <!-- start extrajs -->
@@ -52,6 +56,7 @@
   var [m, h, s, ms] = [0, 0, 0, 0];
   var interval = 0;
 
+ // Audio recording guide by https://medium.com/@bryanjenningz/how-to-record-and-play-audio-in-javascript-faa1b2b3e49b
  const handleSuccess = async function(stream) {
 	 // Começa a gravar
 	 mediaRecorder = new MediaRecorder(stream);
@@ -119,7 +124,7 @@
 	
   });
 
-  pause.addEventListener("click", () => {
+  pause.addEventListener("click", async () => {
 	  clearInterval(interval);
 
 	  // Marca o botão de start como ativo
@@ -129,7 +134,7 @@
 	  export_menu.style.display = "block";
 
 	  // Pausa a gravação de áudio e aguarda a chamada da requisição
-	  mediaRecorder.stop();
+	  await mediaRecorder.stop();
 
   });
 

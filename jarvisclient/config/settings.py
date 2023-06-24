@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Variáveis de ambiente
+JARVIS_ENDPOINT="http://localhost:1880/jarvis"
 
 # Application definition
 
