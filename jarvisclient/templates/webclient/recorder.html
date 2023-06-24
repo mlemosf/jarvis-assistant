@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+<!-- start content -->
+{% block content %}
+<div class="container-sm">
+  <!-- Title -->
+  <div class="row justify-content-md-center">
+	<div class="col">
+	  <h1>Jarvis assistant</h1>
+	</div>
+  </div>
+
+  <!-- Stopwatch timer -->
+  <div
+	  id="stopwatch"
+      class="bg-light p-3 container shadow-sm rounded"
+      style="width: max-content">
+      <div
+        class="bg-white shadow-lg py-4 px-2 fw-bold font-monospace rounded d-flex justify-content-between align-items-center display fs-1">
+        00 : 00 : 00 : 000
+      </div>
+      <div class="mb-3 mt-5 d-flex mx-3 justify-content-between">
+        <div class="btn btn-lg btn-success start">Gravar</div>
+        <div class="btn btn-lg btn-primary pause">Pausar</div>
+        <div class="btn btn-lg btn-danger stop">Reiniciar</div>
+      </div>
+    </div>
+
+  <!-- Export menu -->
+
+</div>
+
+<!-- start extrajs -->
+{% block extrajs %}
+<script type="text/javascript">
+  console.log(document.getElementById("stopwatch").style.display);
+  const stop = document.querySelector(".stop");
+  const pause = document.querySelector(".pause");
+  const start = document.querySelector(".start");
+  const display = document.querySelector(".display");
+
+  // Variáveis para guardar cada tempo
+  var [m, h, s, ms] = [0, 0, 0, 0];
+  var interval = 0;
+
+  // Começa a contagem ao clicar no botão de gravar
+  start.addEventListener("click", () => {
+	  // Marca a div como visível
+	  var stopwatch = document.getElementById("stopwatch")
+	  if (stopwatch.style.display === "none") {
+		  stopwatch.style.display = "block"
+	  }
+
+	  // Inicia o timer
+	  interval = setInterval(setTime, 16);
+	  
+  });
+
+  function setTime() {
+	  ms += 16;
+	  if (ms >= 999) {
+		  s++;
+		  ms = 0;
+		  if (s >= 60) {
+			  m++;
+			  s = 0;
+			  if (m >= 60) {
+				  s++;
+				  m = 0;
+			  }
+		  }
+	  }
+	  display.innerHTML = `${String(h).padStart(2, "0")} : ${String(m).padStart(2,"0")} : ${String(s).padStart(2,"0")} : ${String(ms).padStart(3, "0")}`;
+  }
+
+  // Para o stopwatch ao apertar o stop
+  stop.addEventListener("click", () => {
+	  display.innerHTML = "00 : 00 : 00 : 000";
+	  h = 00;
+	  m = 0;
+	  s = 0;
+	  ms = 0;
+	  clearInterval(interval);
+  });
+
+pause.addEventListener("click", () => {
+  clearInterval(interval);
+});
+
+  
+</script>
+<!-- end extrajs -->
+{% endblock %}
+
+<!-- end content -->
+{% endblock %}
