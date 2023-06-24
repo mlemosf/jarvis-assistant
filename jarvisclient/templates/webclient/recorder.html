@@ -2,38 +2,37 @@
 
 <!-- start content -->
 {% block content %}
+
 <div class="container-sm">
+
   <!-- Title -->
   <div class="row justify-content-md-center">
 	<div class="col">
 	  <h1>Jarvis assistant</h1>
 	</div>
   </div>
+  <!-- /Title -->
 
   <!-- Stopwatch timer -->
-  <div
-	  id="stopwatch"
-      class="bg-light p-3 container shadow-sm rounded"
-      style="width: max-content">
-      <div
-        class="bg-white shadow-lg py-4 px-2 fw-bold font-monospace rounded d-flex justify-content-between align-items-center display fs-1">
-        00 : 00 : 00 : 000
-      </div>
-      <div class="mb-3 mt-5 d-flex mx-3 justify-content-between">
-        <button id="start_btn" class="btn btn-lg btn-success start">Gravar</button>
-        <button id="pause_btn" class="btn btn-lg btn-primary pause">Pausar</button>
-        <button id="stop_btn" class="btn btn-lg btn-danger stop">Reiniciar</button>
-      </button>
+  <div d="stopwatch" class="bg-light p-3 container shadow-sm rounded" style="width: max-content">
+    <div class="bg-white shadow-lg py-4 px-2 fw-bold font-monospace rounded d-flex justify-content-between align-items-center display fs-1">
+      00 : 00 : 00 : 000
     </div>
+    <div class="mb-3 mt-5 d-flex mx-3 justify-content-between">
+      <button id="start_btn" class="btn btn-lg btn-success start">Gravar</button>
+      <button id="pause_btn" class="btn btn-lg btn-primary pause">Pausar</button>
+      <button id="stop_btn" class="btn btn-lg btn-danger stop">Reiniciar</button>
+    </div>
+  </div>
+  <!-- /Stopwatch timer -->
 
   <!-- Export menu -->
 
-</div>
+<div>
 
 <!-- start extrajs -->
 {% block extrajs %}
 <script type="text/javascript">
-  console.log(document.getElementById("stopwatch").style.display);
   const stop = document.querySelector(".stop");
   const pause = document.querySelector(".pause");
   const start = document.querySelector(".start");
@@ -93,6 +92,7 @@
 
   
 </script>
+
 <!-- end extrajs -->
 {% endblock %}
 
