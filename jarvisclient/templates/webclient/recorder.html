@@ -20,10 +20,10 @@
         00 : 00 : 00 : 000
       </div>
       <div class="mb-3 mt-5 d-flex mx-3 justify-content-between">
-        <div class="btn btn-lg btn-success start">Gravar</div>
-        <div class="btn btn-lg btn-primary pause">Pausar</div>
-        <div class="btn btn-lg btn-danger stop">Reiniciar</div>
-      </div>
+        <button id="start_btn" class="btn btn-lg btn-success start">Gravar</button>
+        <button id="pause_btn" class="btn btn-lg btn-primary pause">Pausar</button>
+        <button id="stop_btn" class="btn btn-lg btn-danger stop">Reiniciar</button>
+      </button>
     </div>
 
   <!-- Export menu -->
@@ -45,15 +45,11 @@
 
   // Começa a contagem ao clicar no botão de gravar
   start.addEventListener("click", () => {
-	  // Marca a div como visível
-	  var stopwatch = document.getElementById("stopwatch")
-	  if (stopwatch.style.display === "none") {
-		  stopwatch.style.display = "block"
-	  }
-
 	  // Inicia o timer
 	  interval = setInterval(setTime, 16);
-	  
+
+	  // Desabilita o botão de gravar
+	  start.disabled = true;
   });
 
   function setTime() {
@@ -81,11 +77,19 @@
 	  s = 0;
 	  ms = 0;
 	  clearInterval(interval);
+
+	  // Marca o botão de start como ativo
+	  start.disabled = false;
+	
   });
 
-pause.addEventListener("click", () => {
-  clearInterval(interval);
-});
+  pause.addEventListener("click", () => {
+	  clearInterval(interval);
+
+	  // Marca o botão de start como ativo
+	  start.disabled = false;
+	  
+  });
 
   
 </script>
