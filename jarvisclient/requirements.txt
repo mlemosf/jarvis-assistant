@@ -1,0 +1,12 @@
+asgiref==3.7.2
+certifi==2023.5.7
+charset-normalizer==3.1.0
+Django==4.2.2
+django-environ==0.10.0
+idna==3.4
+PyAudio==0.2.13
+pydub==0.25.1
+python-decouple==3.8
+requests==2.31.0
+sqlparse==0.4.4
+urllib3==2.0.3
