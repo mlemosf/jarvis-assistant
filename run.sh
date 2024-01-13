@@ -1,5 +1,5 @@
 #!/bin/bash
-# Executa a pipeline para geração de texto do Jarvis
+# Executes the Jarvis assistant
 
 # Script options
 AUDIOFILE=jarvisinput.wav
@@ -18,21 +18,21 @@ CTX_SIZE=512
 TEMPERATURE=0.5
 REPEAT_PENALTY=1.5
 
-echo "[INFO] Gravando áudio..." 
+echo "[INFO] Recording audio..." 
 arecord --format=cd ${AUDIOFILE} -d 10
-echo "[INFO] Gerado arquivo ${AUDIOFILE}.wav."
+echo "[INFO] Recorded ${AUDIOFILE}.wav audio file!"
 
-echo "[INFO] Transcrevendo áudio e gerando resposta..."
+echo "[INFO] Transcribing audio and generating answer..."
 
-# Executa o whisper
-echo "[INFO] Executando conversão de voz para texto..."
+# Runs whisper
+echo "[INFO] Converting speech to text..."
 whisper ${AUDIOFILE} \
 		--language $LANGUAGE \
 		--model ${WHISPER_MODEL} \
 		--output_format txt
 
-# Executa o llama com o arquivo gerado
-echo "[INFO] Executando LLaMa..."
+# Runs OpenLLaMa on the generated file
+echo "[INFO] Running OpenLLaMa..."
 ./llama.cpp/main \
 	-m $MODEL \
 	-f ${OUTPUTFILE} \
@@ -44,8 +44,8 @@ echo "[INFO] Executando LLaMa..."
 	--color \
     $FLAGS
 
-# Remove arquivos
-printf "\n[INFO] Removendo arquivos temporários..."
+# Deletes files
+printf "\n[INFO] Removing temp files..."
 rm ${AUDIOFILE}
 rm ${OUTPUTFILE}
 
